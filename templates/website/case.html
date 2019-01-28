@@ -1,0 +1,145 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>View Case | Ultra-Remote-Medicine</title>
+
+  <link rel="stylesheet" type="text/css" href="{% static "headerStyle.css" %}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css"%}"/>
+  <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css"%}"/>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="{% static "bootstrap/js/bootstrap.min.js"%}"></script>
+  <style>
+	label,input{
+    display: inline-block;
+    vertical-align: baseline;
+    width: 140px;
+	text-align: left;
+	}
+	
+	label {
+		color: #2D2D2D;
+		font-size: 15px;
+	}
+	
+	#myModalContainer .modal fade
+   </style>
+</head>
+
+<body>
+
+	{% include "_topBar.html" %}
+
+	<div class="pageCentered">
+		<div class="profilecontainer">
+			
+			<h1><b>Case {{case_id}}</b></h1>
+			<table border="0" cellpadding="5" style="display: inline-block; margin: 0 auto; text-align: left">
+				<tr>
+					<td style="height: 250 px; margin: 0; text-align: left;">
+							<br><label>Patient:</label> <a href="{% url 'display_patient' patient_id %}"> {{firstName}} {{lastName}}</a>
+							<br><label>U.R.M Patient ID:</label> {{patient_id}}
+							<br><label>Gender:</label> {{gender}}
+							<br><label>Regional Health ID:</label> {{health_id}}
+							{%if status == 1%}
+								<form action="{% url 'display_case' case_id 'p' %}" method="post"> {% csrf_token %}
+									<label>Priority:</label> {{priority_form.priority}}
+								</form>
+							{%else%}
+							<br>
+								{%if case.priority == 10%}
+									<label>Priority:</label> High
+								{%elif case.priority == 20%}
+									<label>Priority:</label> Medium
+								{%else%}
+									<label>Priority:</label> Low
+								{%endif%}
+							{%endif%}
+						<form action="{% url 'display_case' case_id 'a' %}" method="post"> {% csrf_token %}
+							{%if case.lock_holder == None%}
+								{%if viewer.doctor%}
+									<label>Lock/Unlock this case:</label> {{adopt_form.toggle_field}}
+								{%else%}
+									<label>Case Holder:</label> None<br>
+								{%endif%}
+							{%else%}
+								{%if viewer.doctor%}
+									{%if viewer.doctor.user == case.lock_holder.user and case.status == 1%}
+										<label>Lock/Unlock this case:</label> {{adopt_form.toggle_field}}
+									{%else%}
+										<label>Case Holder:</label> {{case.lock_holder.user.first_name}} {{case.lock_holder.user.last_name}}
+									{%endif%}
+								{%else%}
+									<br><label>Case Holder:</label> {{case.lock_holder.user.first_name}} {{case.lock_holder.user.last_name}}
+								{%endif%}
+							{%endif%}
+						</form>
+						<form action="{% url 'display_case' case_id 's' %}" method="post"> {% csrf_token %}
+							{%if viewer.doctor and viewer.doctor.user == case.lock_holder.user%}
+								<label>Case Status:</label> {{status_form.status}}
+							{%else%}
+								{%if case.status == 1%}
+									<label>Case Status:</label> Open
+								{%else%}
+									<label>Case Status:</label> Closed
+								{%endif%}
+							{%endif%}
+						</form>
+					</td>
+				</tr>
+			</table>
+				<h1>Scans</h1>
+				
+				{%if scans|length > 0%}
+				
+					{%for scan in scans %}
+					
+						{% include "_scanDisplay.html" %}
+	
+					{%endfor%}
+					
+				{%else%}
+					No scans for this case.
+				{%endif%}
+			
+				<h1>Comments</h1>
+			
+				<br>
+				<b>{{submitter_comments.contents.0.comment_reference.author.first_name}} {{submitter_comments.contents.0.comment_reference.author.last_name}} (Submitter)</b>
+				<br>
+				{%for comment_entry in submitter_comments.contents%}
+					{%with comments=comment_entry template_name="_commentDisplay.html" can_reply=True %} 
+						{% include "_commentDisplay.html" %}
+					{%endwith%}
+				{%endfor%}
+				<br>
+				
+				<!-- Reviewer comments -->
+				{%for comment_group in reviewer_comments%}
+					<br>
+					<b>{{comment_group.contents.0.comment_reference.author.first_name}} {{comment_group.contents.0.comment_reference.author.last_name}}</b>
+					<br>
+					{%for comment_entry in comment_group.contents%}
+						{%with comments=comment_entry template_name="_commentDisplay.html" can_reply=True %} 
+							{% include "_commentDisplay.html" %}
+						{%endwith%}
+					{%endfor%}
+				{%endfor%}
+				
+				<br>
+				<br>
+				<div id="defaultcommentlocation">
+				
+				</div>
+				
+				
+		</div>
+	</div>
+
+</body>
+</html>
+
+{% include "_commentDisplayScript.html" %}

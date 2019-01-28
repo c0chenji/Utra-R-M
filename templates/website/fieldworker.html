@@ -1,0 +1,78 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Field-Worker dashboard | Ultra-Remote-Medicine</title>
+
+  <link rel="stylesheet" type="text/css" href="{% static "headerStyle.css" %}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css"%}"/>
+  <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css"%}"/>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="{% static "bootstrap/js/bootstrap.min.js"%}"></script>
+</head>
+
+<body>
+
+	{% include "_topBar.html" %}
+
+
+	<div class="pageCentered">
+
+		<div class="profilecontainer">
+
+			<h1><b>Dashboard: {{user.first_name}} {{user.last_name}}</b></h1>
+	
+			<h1><b>Cases</b></h1>
+	
+			{% include "_caseDisplay.html" %}
+	
+			<br>
+	
+			<!-- csrf_token was removed, since this is simply a redirection button-->
+				<form id="new_patient" action="{% url 'new_patient' %}" method='get'>
+					<button class = "btn btn-default" type="submit">Add New Patient</button>
+					<br>
+				</form>
+
+		</div>
+
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	var editMode = false;
+	workerinfo.style.display = 'none';
+	{{form.comments.auto_id}}.style.resize = 'none';
+	{{form.comments.auto_id}}.rows = '6';
+	{{form.comments.auto_id}}.style.width = '280px';
+	{{form.comments.auto_id}}.style.height = '100px';
+
+	function enterEditMode() {
+		editMode = true;
+
+		workerstatic.style.display = 'none';
+		workerinfo.style.display = 'block';
+
+	}
+
+	function cancelEditMode() {
+		editMode = false;
+
+		{{form.first_name.auto_id}}.value = '{{first_name}}';
+		{{form.last_name.auto_id}}.value = '{{last_name}}';
+		{{form.phone_number.auto_id}}.value = '{{phone_number}}';
+		{{form.address.auto_id}}.value = '{{address}}';
+		{{form.comments.auto_id}}.value = {{form.comments.auto_id}}.defaultValue;
+
+		workerstatic.style.display = 'block';
+		workerinfo.style.display = 'none';
+	}
+</script>
+
+<body></body>
+
+</html>

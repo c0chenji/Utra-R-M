@@ -1,0 +1,104 @@
+{% load static from staticfiles %}
+<!--  Component for displaying a table of cases. -->
+<!-- http://stackoverflow.com/questions/17732714/datatables-js-sort-columns-containing-html-links-with-integer-text
+	Used this js code for sorting HTML integers
+
+	Used dataTables sorting plugin for priority from this website:
+	http://datatables.net/plug-ins/sorting
+-->
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="{% static "DataTables-1.9.4/media/js/jquery.dataTables.js"%}"></script>
+<link type="text/css" rel="stylesheet" href="{% static "DataTables-1.9.4/media/css/jquery.dataTables.css"%}"/>
+<script src="dataTables.dataSourcePlugins.js"></script>
+<link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css"%}"/>
+
+<script>
+jQuery.fn.dataTableExt.oSort['numeric-html-asc']  = function(a,b) {
+    a = parseInt($(a).text());
+    b = parseInt($(b).text());
+    return ((a < b) ? -1 : ((a > b) ?  1 : 0));
+};
+
+jQuery.fn.dataTableExt.oSort['numeric-html-desc']  = function(a,b) {
+    a = parseInt($(a).text());
+    b = parseInt($(b).text());
+    return ((a < b) ? 1 : ((a > b) ?  -1 : 0));
+};
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "enum-pre": function ( a ) {
+        // Add / alter the switch statement below to match your enum list
+        switch( a ) {
+            case "High":   return 1;
+            case "Medium": return 2;
+            case "Low":    return 3;
+            default:       return 4;
+        }
+    },
+
+    "enum-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "enum-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
+
+$(document).ready(function() {
+	$('#table_id').dataTable({
+		"sPaginationType": "full_numbers",
+		 "aoColumns": [
+            null,
+            { "sType": "numeric-html" },
+            null,
+            null,
+            { "sType": "enum" },
+            null
+        ]
+        });
+} );
+</script>
+{% if cases|length > 0 %}
+
+    <div class="table-responsive">
+
+		<table id="table_id" class="display table table-striped table-bordered" >
+			<thead>
+				<tr>
+					<th>Patient Name</th>
+					<th>Case</th>
+					<th>Date</th>
+					<th>Reviewer</th>
+					<th>Priority</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for case in cases %}
+				<tr>
+					<td><a href="{% url 'display_patient' case.patient_ref.id %}" target="_blank">
+						{{case.patient_ref.first_name}} {{case.patient_ref.last_name}} </a></td>
+					<td><a href="{% url 'display_case' case.case_ref.id %}" target="_blank">{{case.case_ref.id}}</a></td>
+					<td>{{case.case_ref.date_opened}}</td>
+						{%if case.case_ref.lock_holder == None%}
+							{%if viewer.doctor%}
+								<td>{{case.case_ref.lock_holder}}</td>
+							{%else%}
+								<td>{{case.case_ref.lock_holder}}</td>
+							{%endif%}
+						{%else%}
+							<td><a href="{% url 'display_profile' case.case_ref.lock_holder.user.id %}" target="_blank">
+									{{case.case_ref.lock_holder}} </a></td>
+						{%endif%}
+						<td>{{case.priority_text}}</td>
+						<td>{{case.status_text}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+	There are no cases to be displayed.
+	<br>
+{% endif %}

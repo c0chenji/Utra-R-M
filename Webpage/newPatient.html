@@ -1,0 +1,29 @@
+<!--This is the page where field workers can add new patients-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add a new case</title>
+		<script language="JavaScript">
+			function openFile() {
+			window.location = 'file:///' + document.form.selectedFile.value;
+			}
+		</script>
+	</head>
+	<body>
+		<form name="form">
+			Name of patient: <input type="text" name="patientName"><br> <!--link to patent-->
+			Gender: <input type="text" name="gender"><br>
+			DOB: <input type="text" name="DOB"><br>
+			Address: <input type="text" name="address"><br>
+			Patient ID: <input type="text" name="patientID"><br>
+			Phone number: <input type="text" name="phonenumber"><br>
+			Email: <input type="text" name="email"><br>
+			<!--Doctor: <input type="text" name="doctor"><br>-->
+			Your name: <input type="text" name="fWorkerName"><br>
+			Comments: <input type="text" name="comments" style="width: 300px; height: 300px;"><br>
+			<input type="file" name="selectedFile">
+			<input type=button onClick="openFile()" value="Open File">
+		</form>
+		<button type="button">Submit</button>
+	</body>
+</html>

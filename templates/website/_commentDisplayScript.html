@@ -1,0 +1,120 @@
+<!-- Script used by _commentDisplay. -->
+
+<body>
+	<div class="media" id="commentdiv">
+		<div class="media-object pull-left" id="avatarcontainer"
+		style="display: inline-block; height: auto; min-height: 80px; width: auto; min-width: 80px;">
+
+		{%if viewer.doctor%}
+			<img src="/media/{{viewer.doctor.profile_pic}}"
+					style="display: inline-block; max-width: 64px; max-height: px; width: auto; height: auto;">
+			<br>Doctor
+		{%else%}
+		<img src="/media/{{viewer.worker.profile_pic}}"
+					style="display: inline-block; max-width: 64px; max-height: px; width: auto; height: auto;">
+			<br>Worker
+		{%endif%}
+		</div>
+		<div class="media-body">
+			<form id='commentform' method='post' action="{{comment_post_action}}" enctype="multipart/form-data">
+				{% csrf_token %}
+				<table width="100%" border = "0">
+				    <col />
+				    <col width="230 px" />
+					<tr>
+						<td>
+							<b>Post Your Comment</b>
+						</td>
+						<td style="text-align: right">
+							<a id="cancel" href="javascript:;" style="display: none;" onclick="cancel();">Cancel</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div style="min-height: 55px; height: auto;">
+								{{comment_form.comments}}
+								{{comment_form.comment_id}}
+							</div>
+						</td>
+						<td style="text-align: right; vertical-align: top;">
+							
+						</td>
+					</tr>
+				</table>
+				
+				<b>Add a scan:</b> {{comment_form.scan_image}}
+				<br>
+				<input id="submitChanges" type="submit" name="submitChanges" value="Submit Changes" />
+			</form>
+		</div>
+	</div>
+</body>
+
+<script>
+
+	{{comment_form.comments.auto_id}}.style.resize = 'none';
+	{{comment_form.comments.auto_id}}.rows = '3';
+	{{comment_form.comments.auto_id}}.style.width = '100%';
+	{{comment_form.comments.auto_id}}.style.height = '100px';
+	
+	{{comment_form.comment_id.auto_id}}.style.display = 'none';
+	
+	
+	// A collection of Useful variables
+	
+	var comment_box = document.getElementById("commentdiv");
+	var defaultCommentLocation = document.getElementById("defaultcommentlocation");
+	var cancelButton = document.getElementById("cancel");
+	
+	var identifierElementID = "{{comment_form.comment_id.auto_id}}";
+	var identifierElement = document.getElementById(identifierElementID);
+	
+	defaultCommentLocation.appendChild(comment_box);
+
+	
+	var current_comment_id = -1;
+
+	function replyTo(comment_id) {
+		
+		current_comment_id = comment_id;
+		
+		var parent_div_id = "a" + comment_id;
+		var parent_div = document.getElementById(parent_div_id);
+		parent_div.appendChild(comment_box);
+		comment_box.style.display = 'block';
+		cancelButton.style.display = 'block';
+		
+		identifierElement.value = comment_id;
+		
+		// Hide all reply buttons.
+		for (i = 0; i < {{comment_count}}; i++) {
+			var reply_button_id = "r" + i;
+			var reply_button = document.getElementById(reply_button_id);
+			reply_button.style.display = 'none';
+		}
+		
+		{{comment_form.comments.auto_id}}.value = '';
+	}
+	
+	function cancel() {
+		
+		var parent_div_id = "a" + current_comment_id;
+		var parent_div = document.getElementById(parent_div_id);
+		
+		current_comment_id = -1;
+		identifierElement.value = current_comment_id;
+		
+		defaultCommentLocation.appendChild(comment_box);
+		cancelButton.style.display = 'none';
+		
+		// Show all reply buttons.
+		for (i = 0; i < {{comment_count}}; i++) {
+			var reply_button_id = "r" + i;
+			var reply_button = document.getElementById(reply_button_id);
+			reply_button.style.display = 'block';
+		}
+		
+		{{comment_form.comments.auto_id}}.value = '';
+		
+	}
+</script>

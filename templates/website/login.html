@@ -1,0 +1,106 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Log in | Ultra-Remote-Medicine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css"%}"/>
+   <link type="text/css" rel="stylesheet" href="{% static "bootstrap/css/bootstrap-responsive.css"%}"/>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="{% static "bootstrap/js/bootstrap.min.js"%}"></script>
+  
+  <style>
+	body{
+		 width: 100%;
+    height: 100%;
+	}
+  </style>
+  
+  <style>
+  #p1 {color:red;}
+  </style>
+  
+  <style>
+  IMG.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto 
+}
+inputbox.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto 
+}
+}
+  </style>
+  
+  <style>
+  .inputbox {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  /*
+  Not even necessary really. 
+  e.g. Height could be left out!
+  */
+  width: 40%;
+  height: 50%;
+}
+  </style>
+</head>
+  <div class = "center">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    </div> 
+     
+    <body>
+    <div ">
+      <img src="{% static "bootstrap/image/logo.jpg"%}" alt="header"  class="img-responsive displayed"/>
+    </div>
+ 
+		
+	
+	
+  <div class="container" id="inputbox">
+	<div class="row">
+		<div class="col-md-5"></div>
+			<div class="col-md-4">
+				<form class="form-horizontal" role="form" action="/login" method="post">
+					<div class="form-group">
+						<form id="login-form" action="{% url 'login' %}" method="post">
+							{% csrf_token %}
+          
+						<div class="col-sm-6">
+							<label for="inputUsernameEmail">Username</label>
+							<input type="username" class="form-control" id="username" name = "username" placeholder="Username">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-6">
+							<label for="inputPassword">Password</label>
+								<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary">Log in</button>
+						</form>
+					{%if status = 'f'%}
+						<br>
+						<p id="p1">Invalid username or password</p>
+					{%endif%}
+			</div>
+				</form>
+		</div>
+    </div>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<script>
+	function up(doctorName, speciality, schedule)
+	{
+		var name = document.getElementById("doctorName");
+		var setName = document.getElementById("doctorNameSet");
+		setName.innerHTML = name.value;
+		var spec = document.getElementById("speciality");
+		var setSpec = document.getElementById("specialitySet");
+		setSpec.innerHTML = spec.value;
+		var sched = document.getElementById("schedule");
+		var setSched = document.getElementById("scheduleSet");
+		setSched.innerHTML = sched.value;
+	}
+</script>
+<h1>
+  Doctor's Page
+</h1>
+<table border="1">
+<tr>
+<td><img src="doctor.png" width="104" height="142"><button type="button">Edit</button><br></td>
+<td>
+<form method='post' onsubmit="up(doctorName, speciality, schedule);return false;">
+	Name: <input type="text" id="doctorName" name="doctorName"><br>
+	Speciality: <input type="text" id="speciality" name="speciality"><br>
+	Scheduale: <input type="text" id="schedule" name="schedule"><br>
+	<input type="submit" name="submit" value="Edit"/>
+	<p id="doctorNameSet"></p><br>
+	<p id="specialitySet"></p><br>
+	<p id="scheduleSet"></p><br>
+	<input type="text" name="search"><button type="button">search</button>
+</form>
+</tr>
+
+
+<table border="1">
+<tr>
+<td><button type="button">Patient Name</button></td>
+<td><button type="button">Status</button></td>
+<td><button type="button">Age</button></td>
+<td><button type="button">Gender</button></td>
+<td><button type="button">Priority</button></td>
+<td><button type="button">Date</button></td>
+<td><button type="button">Link to cases</button></td>
+<tr>
+
+<td><br><a href="http://www.google.ca" target="_blank">patient 1</a> </td>
+<td><select>
+  <option value="pending(not seen)">pending(not seen)</option>
+  <option value="pending(seen)">pending(seen)</option>
+  <option value="completed" selected>completed</option>
+</select></td>
+<td>30</td>
+<td>Male</td>
+<td>5<button type="button">Edit</button></td>
+<td>2013/10/18</td>
+<td><a href="http://www.google.ca" target="_blank">case-link 1</a></td>
+<tr>
+<td><br><a href="http://www.google.ca" target="_blank">patient 2</a> </td>
+<td><select>
+  <option value="pending(not seen)">pending(not seen)</option>
+  <option value="pending(seen)" selected>pending(seen)</option>
+  <option value="completed">completed</option>
+</td>  
+<td>57</td>
+<td>Female</td>
+<td>1<button type="button">Edit</button></td>
+<td>2013/10/15</td>
+
+<td><a href="http://www.google.ca" target="_blank">case-link 2</a></td>
+</tr>
+<tr>
+<td><br><a href="http://www.google.ca" target="_blank">patient 3</a> </td>
+<td><select>
+  <option value="pending(not seen)" selected>pending(not seen)</option>
+  <option value="pending(seen)">pending(seen)</option>
+  <option value="completed">completed</option>
+</select>
+</td>
+<td>64</td>
+<td>Male</td>
+<td>7<button type="button">Edit</button></td>
+<td>2013/10/12</td>
+<td><a href="http://www.google.ca" target="_blank">case-link 3 </a></td>
+</tr>
+</tr>
+</table>
+
+</body>
+</html>
